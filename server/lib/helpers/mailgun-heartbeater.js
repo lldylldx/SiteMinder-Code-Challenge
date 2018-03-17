@@ -9,7 +9,7 @@ const MailgunClient = require('../classes/mailgun-client');
  * Helper to check heartbeats of mailgun server
  */
 
-module.exports = async function mailgunHeartbeater() {
+module.exports = function mailgunHeartbeater() {
 
   //send a testmode message to mailgun for heartbeats check
   const data = {

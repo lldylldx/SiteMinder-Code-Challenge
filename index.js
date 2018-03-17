@@ -3,15 +3,27 @@
 /**
  * Dependencies
  */
-
-const server = require('./server')()
-const config = require('./configs')
 const schedule = require('node-schedule');
-const mailServersManager = require('./server/lib/classes/mail-servers-manager');
-const serversStatusCheck = require('./server/lib/helpers/servers-status-check');
+const fs = require('fs');
+const path = require('path');
+const sleep = require('sleep');
 
-server.create(config)
-server.start()
+const  filePath = path.join(process.cwd()+'/configs/', 'local.js');
+
+if (!fs.existsSync(filePath)) {
+
+  console.log('Can\'t fetch config file from AWS s3, Sever will be shut down.');
+  process.exit();
+
+}
+
+console.log('Fetched the config file from AWS s3, Sever will be started...');
+
+const server = require('./server')(),
+      config = require('./configs');
+
+server.create(config);
+server.start();
 
 
 /*console.log('The primary server: ' + mailServersManager.getPrimServer());
