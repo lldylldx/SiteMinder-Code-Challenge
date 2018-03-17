@@ -47,13 +47,15 @@ class MailgunMailBuilder {
 
     //Extract properties from data
     const {
-      to, from, cc, bcc, subject, content:text
+      to, from, cc, bcc, subject, content
     } = data;
+
+    console.log('content.value ' + content[0].value);
 
     //Set data
     this.setFrom(from);
     this.setSubject(subject);
-    this.setText(text);
+    this.setText(content);
     this.setTo(to);
     this.setCc(cc);
     this.setBcc(bcc);
@@ -73,11 +75,13 @@ class MailgunMailBuilder {
   /**
    * Set content
    */
-  setText(text) {
-    if (typeof text === 'undefined') {
+  setText(content) {
+    if (typeof content === 'undefined') {
       return;
     }
-    this.text = (text.value);
+    //default only support text/plaint format content
+    this.text = content[0].value;
+
   }
 
   /**

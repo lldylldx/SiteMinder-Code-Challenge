@@ -37,14 +37,9 @@ module.exports = async function sendgridHeartbeater() {
     "mail_settings":{"sandbox_mode":{"enable":true}}
   };
 
-
-
-
-//  const data = {"personalizations":[{"to":[{"email":"lldylldx@gmail.com"}],"subject":"Hello, World! By Sendgrid!"}],"from":{"email":"test@example.com"},"reply_to":{"email":"test@example.com"},"subject":"1","content":[{"type":"text/plain","value":"1"}],"mail_settings":{"sandbox_mode":{"enable":true}}};
-
-  const sendgridClient = new SendgridClient('post', 'mail/send', data);
+  const sendgridClient = new SendgridClient('post', 'mail/send');
   const response = await sendgridClient.send(data);
-  // call mailgun message body builder.
+
   console.log('sendgridClient.send return: ' + response.status);
 
   if(response.status == '200') {

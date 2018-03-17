@@ -22,13 +22,19 @@ async function sendMails(req, res) {
     }
     return res.json(message);
   }
-  mailServicesManager.setServerName(serverName);
-  mailServicesManager.setClient(serverName, 'post', 'mail/send');
 
+  // Create mail client based on primary server
+  mailServicesManager.setServerName(serverName);
+  if(serverName == 'sendgrid') {
+    mailServicesManager.setClient('post', 'mail/send');
+  }
+  else if (serverName == 'mailgun') {
+    mailServicesManager.setClient('post', '/messages');
+  }
+  // send email
   const response = await mailServicesManager.sendMail(req.body);
-  console.log('$$$$$$$$$$$$$$$$$$$$$$$$$');
   console.log('response.status: ' + response.status);
-  console.log('$$$$$$$$$$$$$$$$$$$$$$$$$');
+  // check response from mail client
   if(response.status == '200' || response.status == '202') { //use regex
     const timestamp = Date.now() / 1000 | 0;
     const message = {

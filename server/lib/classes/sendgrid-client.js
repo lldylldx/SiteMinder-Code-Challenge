@@ -15,7 +15,7 @@ const
    /**
     * Constructor
     */
-   constructor(method='', endpoint='', data={}) {
+   constructor(method='', endpoint='') {
      console.log('In SendgridClient.constructor()....');
      this.apiKey = config.sendgridApiKey;
      this.baseURL = config.sendgridApiBaseURL;
@@ -50,20 +50,6 @@ const
         return Promise.reject(new Error(400));
       }
    }
-
-   /**
-    * Set data
-    */
-   /*setData(data) {
-      this.data = data;
-   }*/
-
-   /**
-    * Get data
-    */
-   /*getData(data) {
-      this.data = data;
-   }*/
 
    /**
     * Set API key

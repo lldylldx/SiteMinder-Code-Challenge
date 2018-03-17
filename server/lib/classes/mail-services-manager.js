@@ -15,8 +15,11 @@ const
 class MailServicesManager {
 
   constructor(serverName='') {
-    this.serverName = serverName;
-    this.setClient(serverName);
+    if(typeof serverName == 'string') {
+      this.serverName = serverName;
+      //this.setClient(serverName);
+    }
+
   }
 
   /**
@@ -62,14 +65,15 @@ class MailServicesManager {
   /**
    * Set client
    */
-  setClient(serverName, method, endpoint) {
+  setClient(method, endpoint) {
 
-    if(serverName == 'sendgrid') {
+    if(this.serverName == 'sendgrid') {
       this.client = new SendgridClient(method, endpoint);
-      console.log('Create a new client: ' + this.client);
+      console.log('Create a new sendgrid client.');
     }
 
-    if(serverName == 'mailgun') {
+    if(this.serverName == 'mailgun') {
+      console.log('create a mailgun client.');
       this.client = new MailgunClient(method, endpoint);
     }
   }

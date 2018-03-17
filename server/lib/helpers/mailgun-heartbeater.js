@@ -22,7 +22,7 @@ module.exports = async function mailgunHeartbeater() {
 
   //const data1 = {"from":"Peter Tan <admin@thesouthface.com.au>","to":"Peter Tan <lldylldx@gmail.com>","subject":"Hello, World! By Sendgrid!","cc":"Wei Zhao <abc@test.com>","bcc":"Wei Zhao <bcd@test.com>"};
 
-  const mailgunClient = new MailgunClient('post', 'mail/send', data);
+  const mailgunClient = new MailgunClient('post', 'messages');
   const response = await mailgunClient.send(data);
 
   console.log('mailgunClient.send return: ' + response.status);

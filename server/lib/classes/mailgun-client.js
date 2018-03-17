@@ -14,9 +14,10 @@ const
    /**
     * Constructor
     */
-   constructor(method='', endpoint='', data={}) {
+   constructor(method='', endpoint='') {
      this.apiKey = config.mailgunApiKey;
      this.baseURL = config.mailgunApiBaseURL;
+     this.domain = config.mailgunDomain;
      this.method = method;
      this.endPoint = endpoint;
      //this.data = data;
@@ -28,13 +29,16 @@ const
    send(data) {
 
      console.log('In MailgunClient.send()...');
-     console.log(JSON.stringify(data));
+     //console.log(JSON.stringify(data));
      //set the api key
      const auth = {
        username: 'api',
        password: this.apiKey
      };
-     const url = this.baseURL + this.endPoint;
+     const url = this.baseURL + this.domain + this.endPoint;
+
+     console.log('api url is: ' + url);
+     console.log('data is ' + JSON.stringify(data));
 
      try {
        return axios({method: this.method, url: url, auth: auth, params: data})
@@ -46,21 +50,6 @@ const
        return Promise.reject(new Error(400));
      }
 
-   }
-
-
-   /**
-    * Set data
-    */
-   setData(data) {
-      this.data = data;
-   }
-
-   /**
-    * Get data
-    */
-   getData(data) {
-      this.data = data;
    }
 
    /**
