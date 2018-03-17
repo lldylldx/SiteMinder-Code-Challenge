@@ -15,7 +15,7 @@ class MailServersManager {
      this.mailServers.set('mailgun', 'active'); // should be set to 'down'
      this.mailServers.set('sendgrid', 'active');
      this.primServDownTime = 0;
-     this.primServ = 'mailgun'; // should be set to 'null'
+     this.primServ = 'sendgrid'; // should be set to 'null'
    }
 
    addNewServer(servName, servStat) {
