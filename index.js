@@ -6,7 +6,7 @@
 const schedule = require('node-schedule');
 const fs = require('fs');
 const path = require('path');
-const sleep = require('sleep');
+const { fork } = require('child_process');
 
 const  filePath = path.join(process.cwd()+'/configs/', 'local.js');
 
@@ -24,6 +24,13 @@ const server = require('./server')(),
 
 server.create(config);
 server.start();
+
+// fork a child process to handle AWS SQS queue messages.
+const grabAndSend = fork('./server/lib/helpers/send-email-by-sqs.js');
+/*compute.send('start');
+compute.on('message', count => {
+  console.log(`Count is ${count}`);
+});*/
 
 
 /*console.log('The primary server: ' + mailServersManager.getPrimServer());
