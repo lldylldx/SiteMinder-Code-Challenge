@@ -110,6 +110,7 @@ http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/mail/se
 # Design
 
 ## Problems and Solutions
+
 * How to make the email service not block when either proxy MailGun or SendGrid email service is down?
 
 
@@ -129,15 +130,25 @@ Then another active email server will then be used to send this email after prim
 
 * How to reduce data loss due to everything?
 
+Data loss happened in different situation, for example, node server is overloaded, network issues caused data missing during transmission between different network node, slow backend with heavy traffic, etc.
+
+There are many things can be done to reduce data loss. The solutions depend on different data loss reason. For example, heavy traffic and slow backend server can be solved by scaling up the application cluster, adding servers cluster to do load balance, adding different level of local cache or queue (in-memory or persistence into DB, file system, etc.).
+
+To make it simple, this application use AWS SQS as a solution to avoid data loss. It detect node server status by monitoring event loop lag value. If lag > 70ms, which means CPU might be used over 90% and long queue waiting for being handled. As a single node, in this situation, it just response a server side error (503) to users without doing anything further. Data loss will happen at this stage. When lag is between 10ms and 70ms (CPU usage  between around 60% to 90%), the application will dispatch the incoming queries to AWS S3 and return success directly to users if succeeded.
+
+At the same time, there's another child process keep running independent against the node server, which keep pulling messages from SQS queue every 10s and send emails based on that. If email is sent successfully, the message will be deleted from SQS queue, otherwise, will resend it again.
+
+In this way, the application can handle big traffic better. Other better designed queue can be used to improve the performance as well. Cloud based application scaling tech can also be another options.
 
 * How to keep secrets in the black box?
 
+Using local config file together with other source code will cause some sensitive data is exposed to the public, which may cause potential security problems. This application will download config file from AWS S3 bucket at the beginning of initial stage. And store AWS access key onto the published server to avoid this security issue in many circumstance.
 
 ## Tests
 As based on BDD/TDD, test is very important to make sure the code quality. Within this application, Mocha, Chalk, Node-Mock-Http modules are used in UT/FT/IT. CURL is also used in ST.
 
 ## TODO List
-* Dockerize this application to make it more flexibile for the production deployment and scaling
+* Dockerize this application to make it more flexible for the production deployment and scaling
 * Use Kubernetes to auto deploy, scale and manage the docerized application
 
 
