@@ -74,6 +74,7 @@ curl -i --request POST \
 ## API Details
 
 * URL
+
 http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/
 
 * Method    
@@ -81,22 +82,31 @@ http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/
 
 * Data Params
 
-|Params Name    | Params Type   | Description                                 |Required|
-|:-------------:|:-------------:|:--------------------------------------------|:-------|
-|To             | array[object] |email: string; name: string (min:1, max:1000)|required|
-|From           |Object         |email: string; name: string |required|
-|CC             | array[object] |email: string; name: string (min:1, max:1000)|optional|
-|BCC            | array[object] |email: string; name: string (min:1, max:1000)|optional|
-|Subject        |Object         |subject of your email.                       |required|
-|Content        |Object         |specify the content of your email            |required|
+|Params Name    | Params Type   | Description                                       |Required|
+|:-------------:|:-------------:|:--------------------------------------------------|:-------|
+|To             | array[object] |email: string; name: string <br />(min:1, max:1000)|required|
+|From           |Object         |email: string; name: string                        |required|
+|CC             | array[object] |email: string; name: string <br />(min:1, max:1000)|optional|
+|BCC            | array[object] |email: string; name: string <br />(min:1, max:1000)|optional|
+|Subject        |Object         |subject of your email.                             |required|
+|Content        |Object         |specify the content of your email                  |required|
 
 * Success Response:
-
+  * code: 200
+`{
+  "id": "XXXXXXXXXXXXXXXXXXX",
+  "message": "Queued. Thank you."
+}`
 * Error Response:
-  * Code: 401 UNAUTHORIZED <br />
+
+  * code: 402 Request Failed <br />
   Content:
-  `{ code: 401,
-    errors: [{
+  `{"errors":[{"message":"The from email does not contain a valid address.","field":"from"}]`
+
+  * Code: 400 Bad Request <br />
+  Content:
+  `{
+    "errors": [{
       field: 'to',
       message: 'Missing mandatory parameter'
     },
@@ -104,14 +114,35 @@ http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/
       field: 'from',
       message: 'Invalid email address'}] }`
 
-  OR
-
-  * Code: 422 UNPROCESSABLE ENTRY <br />
-    Content: `{ error : "Email Invalid" }`
+  * Code: 404 Not Found <br />
+  Content:
+  `{"errors:":[{"message":"The requested item doesn’t exist"}]}`
+  * Code: 415 Unsupported Media Type <br />
+    Content:
+    `{"errors":[{"message":"Content-Type should be application/json."}]}`
 
 * Sample Call
 
+  * Sunny Day Call:
+
+```sh
+curl -i --request POST \
+--URL http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/mail/send
+--header 'content-type: application/json' \
+--data '{"to":[{"email":"lldylldx@gmail.com","name":"Peter Tan"},{"email":"Hao Tan <south.face.au@gmail.com>"}],"cc":[{"email":"abc@test.com"}],"bcc":[{"email":"bcd@test.com","name":"Wei Zhao"}],"subject":"Hello, World!","from":{"email":"The Future <future@example.com>","name":"The Future"},"content":[{"type":"text/plaint","value":"Hello, world from the future!"}]}'
+```
+  * Rainy Day Call:
+
+```sh
+curl -i --request POST \
+--URL http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/mail/send
+--header 'content-type: application/json' \
+--data '{"to":[{"email":"lldylldx@gmail.com","name":"Peter Tan"}], "subject":"Hello, World!", "content":[{"type":"text/plaint","value":"Hello, world from the future!"}]}'
+```
+
 * Notes
+
+  N/A
 
 # Design Details
 
@@ -129,9 +160,8 @@ Then another active email server will then be used to send this email after prim
 
 * **How to deal with unresponsive error?**
 
-
-1. Set timer with timeout when calling async services.
-2. When Node Server is overloaded (long event loop lag, intensive CPU usage > 90%), then reject the incoming requests at that moment.
+  * Set timer with timeout when calling async services.
+  * When Node Server is overloaded (long event loop lag, intensive CPU usage > 90%), then reject the incoming requests at that moment.
 
 
 * **How to reduce data loss due to everything?**
