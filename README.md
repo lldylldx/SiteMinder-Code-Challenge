@@ -8,15 +8,17 @@ __Table of Contents__
 - [Documentation](#documentation)
   - [Install](#install)
   - [Setup Environment](#setup-environment)
-  - [Methods](#methods)
-  - [Browser Demo](#browser-demo)
+  - [Usage Overview](#usage-overview)
+  - [Request Example](#request-example)
+  - [API URL](#api-url)
+  - [API Details](#api-details)
   - [Examples](https://github.com/mailgun/mailgun-js/tree/c379f79ea2a2e0f825103751a3a102d8bdd3dd1b/example)
-- [Design](#design)
+- [Solution Design](#solution-design)
   - [Problems And Solutions](#problems-and-solutions)
   - [Tech Tradeoffs](#tech-tradeoffs)
   - [Tests](#tests)
-  - [TODO List](##todo-list)
-  - [Design Optimising](##design-optimising)
+  - [TODO List](#todo-list)
+  - [Design Optimising](#design-optimising)
 
 # Documentation
 ## Install
@@ -42,7 +44,7 @@ export SECRET_ACCESS_KEY="XXXXXXXXXXXXXXXXXXX"
 ## Usage Overview
 From the client side, users should send a HTTP 'POST' with email details (like to, from, cc, bcc, subject, content) in request body which follows JSON format.
 
-#### Request Body Example:
+#### Request Example:
 
 Let's use Curl command for an example in linux/unix OS
 
@@ -107,7 +109,7 @@ http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/mail/se
 
 * **Notes:**
 
-# Design
+# Solution Design  
 
 ## Problems and Solutions
 
