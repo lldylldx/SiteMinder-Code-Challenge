@@ -10,10 +10,9 @@ __Table of Contents__
   - [Setup Environment](#setup-environment)
   - [Usage Overview](#usage-overview)
   - [Request Example](#request-example)
-  - [API URL](#api-url)
   - [API Details](#api-details)
-  - [Examples](https://github.com/mailgun/mailgun-js/tree/c379f79ea2a2e0f825103751a3a102d8bdd3dd1b/example)
-- [Solution Design](#solution-design)
+
+- [Design Details](#design-details)
   - [Problems And Solutions](#problems-and-solutions)
   - [Tech Tradeoffs](#tech-tradeoffs)
   - [Tests](#tests)
@@ -72,25 +71,30 @@ curl -i --request POST \
 --data 'PUT JSON BODY ABOVE Into HERE'
 ```
 
-## API URL
-
-http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/mail/send
-
 ## API Details
-* **URL**
-  <_The URL Structure (path only, no root url)_>
 
-* **Method:**    
-    <_The request type_>
-* **URL Params**
+* URL
+http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/
 
-* **Data Params**
+* Method    
+    mail/send
 
-* **Success Response:**
+* Data Params
 
-* **Error Response:**
-  * **Code:** 401 UNAUTHORIZED <br />
-  **Content:**
+|Params Name    | Params Type   | Description                                 |Required|
+|:-------------:|:-------------:|:--------------------------------------------|:-------|
+|To             | array[object] |email: string; name: string (min:1, max:1000)|required|
+|From           |Object         |email: string; name: string |required|
+|CC             | array[object] |email: string; name: string (min:1, max:1000)|optional|
+|BCC            | array[object] |email: string; name: string (min:1, max:1000)|optional|
+|Subject        |Object         |subject of your email.                       |required|
+|Content        |Object         |specify the content of your email            |required|
+
+* Success Response:
+
+* Error Response:
+  * Code: 401 UNAUTHORIZED <br />
+  Content:
   `{ code: 401,
     errors: [{
       field: 'to',
@@ -102,18 +106,18 @@ http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/mail/se
 
   OR
 
-  * **Code:** 422 UNPROCESSABLE ENTRY <br />
-    **Content:** `{ error : "Email Invalid" }`
+  * Code: 422 UNPROCESSABLE ENTRY <br />
+    Content: `{ error : "Email Invalid" }`
 
-* **Sample Call:**
+* Sample Call
 
-* **Notes:**
+* Notes
 
-# Solution Design  
+# Design Details
 
 ## Problems and Solutions
 
-* How to make the email service not block when either proxy MailGun or SendGrid email service is down?
+* **How to make the email service not block when either proxy MailGun or SendGrid email service is down?**
 
 
 Initiate a scheduler to send heartbeats every 10 sec to both MailGun and SendGrid by using their test mode APIs. Based on the heartbeat checking results, a singleton class 'MailServersManager' maintains properties like Primary Server, Server Status (active ? down ?) , primary server down times, etc.
@@ -123,14 +127,14 @@ When end users try to call RESTful API to send emails, firstly, primary server s
 Then another active email server will then be used to send this email after primary server failed. If still fail to send email out, this request will be sent to AWS SQS and wait for another try when the email server is in service.
 
 
-* How to deal with unresponsive error?
+* **How to deal with unresponsive error?**
 
 
 1. Set timer with timeout when calling async services.
 2. When Node Server is overloaded (long event loop lag, intensive CPU usage > 90%), then reject the incoming requests at that moment.
 
 
-* How to reduce data loss due to everything?
+* **How to reduce data loss due to everything?**
 
 Data loss happened in different situation, for example, node server is overloaded, network issues caused data missing during transmission between different network node, slow backend with heavy traffic, etc.
 
@@ -142,16 +146,16 @@ At the same time, there's another child process keep running independent against
 
 In this way, the application can handle big traffic better. Other better designed queue can be used to improve the performance as well. Cloud based application scaling tech can also be another options.
 
-* How to keep secrets in the black box?
+* **How to keep secrets in the black box?**
 
 Using local config file together with other source code will cause some sensitive data is exposed to the public, which may cause potential security problems. This application will download config file from AWS S3 bucket at the beginning of initial stage. And store AWS access key onto the published server to avoid this security issue in many circumstance.
 
 ## Tests
-As based on BDD/TDD, test is very important to make sure the code quality. Within this application, Mocha, Chalk, Node-Mock-Http modules are used in UT/FT/IT. CURL is also used in ST.
+Based on BDD/TDD, test is very important to make sure the code quality. Within this application, Mocha, Chalk, Node-Mock-Http modules are used in UT/FT/IT. CURL is also used in ST.
 
-## TODO List
+## ToDo List
 * Dockerize this application to make it more flexible for the production deployment and scaling
-* Use Kubernetes to auto deploy, scale and manage the docerized application
+* Use Kubernetes to auto deploy, scale and manage the dockerized application
 
 
 ## Design Optimising
@@ -165,4 +169,4 @@ As based on BDD/TDD, test is very important to make sure the code quality. Withi
 
 Copyright 2018 Peter Tan.
 
-Licensed under the **[MIT License] [license]**.
+Licensed under the [MIT License] [license].
