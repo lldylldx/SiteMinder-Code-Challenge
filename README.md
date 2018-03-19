@@ -112,20 +112,21 @@ http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/mail/se
 ## Problems and Solutions
 * How to make the email service not block when either proxy MailGun or SendGrid email service is down?
 
-```text
-Initiate a scheduler to send heartbeats every 10 sec to both MailGun and SendGrid by using their test mode APIs. Based on the heartbeat checking results, a singleton class 'MailServersManager' maintains properties like Primary Server, Server Status (active ? down ?) , primary server down times, etc.
-When end users try to call RESTful API to send emails, firstly, primary server should be used to send emails. If failed, primary server down time will be add 1.(When primary server down times equal '3', the scheduler should set another active 1mail server as the primary one and then reset the down time to 0.) Then another active email server will then be used to send this email after primary server failed.
-If still fail to send email out, this request will be sent to AWS SQS and wait for another try when the email server is in service.
 
-```
+Initiate a scheduler to send heartbeats every 10 sec to both MailGun and SendGrid by using their test mode APIs. Based on the heartbeat checking results, a singleton class 'MailServersManager' maintains properties like Primary Server, Server Status (active ? down ?) , primary server down times, etc.
+
+When end users try to call RESTful API to send emails, firstly, primary server should be used to send emails. If failed, primary server down time will be add 1.(When primary server down times equal '3', the scheduler should set another active mail server as the primary one and then reset the down time to 0.)
+
+Then another active email server will then be used to send this email after primary server failed. If still fail to send email out, this request will be sent to AWS SQS and wait for another try when the email server is in service.
+
 
 * How to deal with unresponsive error?
 
-```
+
 1. Set timer with timeout when calling async services.
 2. When Node Server is overloaded (long event loop lag, intensive CPU usage > 90%), then reject the incoming requests at that moment.
 
-```
+
 * How to reduce data loss due to everything?
 
 
