@@ -37,6 +37,7 @@ router.use('/send', (req, res, next) => {
     return next(res.json(resJson));
   }
 
+  // add AWS SQS to support offload traffic when node server is a bit busy
   if(lag() < 70 && lag() > 10) {
   //if(true) {  // for test.
     const body = JSON.stringify(req.body);
