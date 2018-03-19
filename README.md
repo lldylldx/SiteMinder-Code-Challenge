@@ -15,7 +15,7 @@ __Table of Contents__
 - [Design Details](#design-details)
   - [Directory Structures](#directory-structures)
   - [Problems And Solutions](#problems-and-solutions)
-  - [Tech Tradeoffs](#tech-tradeoffs)
+  - [Deployment](#deployment)
   - [Tests](#tests)
   - [TODO List](#todo-list)
   - [Design Optimising](#design-optimising)
@@ -206,6 +206,12 @@ In this way, the application can handle big traffic better. Other better designe
 * **How to keep secrets in the black box?**
 
 Using local config file together with other source code will cause some sensitive data is exposed to the public, which may cause potential security problems. This application will download config file from AWS S3 bucket at the beginning of initial stage. And store AWS access key onto the published server to avoid this security issue in many circumstance.
+
+## Deployment
+
+The application has been deployed to AWS EC2:
+
+http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000
 
 ## Tests
 Based on BDD/TDD, test is very important to make sure the code quality. Within this application, Mocha, Chalk, Node-Mock-Http modules are used in UT/FT/IT. CURL is also used in ST.
