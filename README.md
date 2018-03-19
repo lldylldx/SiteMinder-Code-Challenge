@@ -40,7 +40,35 @@ export SECRET_ACCESS_KEY="XXXXXXXXXXXXXXXXXXX"
 ```
 
 ## Usage Overview
+From the client side, users should send a HTTP 'POST' with email details (like to, from, cc, bcc, subject, content) in request body which follows JSON format.
 
+#### Request Body Example:
+
+Let's use Curl command for an example in linux/unix OS
+
+JSON BODY:
+```json
+{
+  "to":[
+          {"email":"lldylldx@gmail.com","name":"Peter Tan"},
+          {"email":"Hao Tan <south.face.au@gmail.com>"}
+       ],
+  "cc":[{"email":"abc@test.com"}],
+  "bcc":[{"email":"bcd@test.com","name":"Wei Zhao"}],
+  "subject":"Hello, World! By Sendgrid!",
+  "from":{"email":"The Future <future@example.com>","name":"The Future"},
+  "content":[{"type":"text/plaint","value":"Hello, world from the future!"}]
+}
+```
+
+Curl command:
+
+```sh
+curl -i --request POST \
+--URL http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/mail/send
+--header 'content-type: application/json'
+--data 'PUT JSON BODY ABOVE Into HERE'
+```
 ## API URL
 
 http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/mail/send
@@ -67,8 +95,7 @@ http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/mail/se
     },
     {
       field: 'from',
-      message: 'Invalid email address'  
-        }] }`
+      message: 'Invalid email address'}] }`
 
   OR
 
