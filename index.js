@@ -38,5 +38,4 @@ console.log('The mailgun server status: ' + mailServersManager.getServerStatus('
 console.log('The sendgrid server status: ' + mailServersManager.getServerStatus('sendgrid'));*/
 //start the heartbeats checking service.
 
-
-//schedule.scheduleJob('*/15 * * * * *', serversStatusCheck);
+schedule.scheduleJob('*/15 * * * * *', serversStatusCheck);
