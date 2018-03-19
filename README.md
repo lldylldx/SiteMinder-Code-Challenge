@@ -9,7 +9,7 @@ __Table of Contents__
   - [Install](#install)
   - [Setup Environment](#setup-environment)
   - [Usage Overview](#usage-overview)
-  - [Request Example](#request-example)
+  - [POST Request Example](#post-request-example)
   - [API Details](#api-details)
 
 - [Design Details](#design-details)
@@ -26,7 +26,7 @@ __Table of Contents__
 - Requires ASW S3, to store your config file
 - Requires ASW SQS, to store out of bound email messages
 
-In the application root folder, install and run this application:
+In the application root folder, install and run this application by the following commands:
 
 ```sh
 npm install
@@ -92,7 +92,8 @@ http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/
 |Content        |Object         |specify the content of your email                  |required|
 
 * Success Response:
-  * code: 200
+  * code: 200 Request Succeeded!
+  Content:
 `{
   "id": "XXXXXXXXXXXXXXXXXXX",
   "message": "Queued. Thank you."
@@ -131,6 +132,7 @@ curl -i --request POST \
 --header 'content-type: application/json' \
 --data '{"to":[{"email":"lldylldx@gmail.com","name":"Peter Tan"},{"email":"Hao Tan <south.face.au@gmail.com>"}],"cc":[{"email":"abc@test.com"}],"bcc":[{"email":"bcd@test.com","name":"Wei Zhao"}],"subject":"Hello, World!","from":{"email":"The Future <future@example.com>","name":"The Future"},"content":[{"type":"text/plaint","value":"Hello, world from the future!"}]}'
 ```
+
   * Rainy Day Call:
 
 ```sh
