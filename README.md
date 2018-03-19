@@ -13,6 +13,7 @@ __Table of Contents__
   - [API Details](#api-details)
 
 - [Design Details](#design-details)
+  - [Directory Structures](#directory-structures)
   - [Problems And Solutions](#problems-and-solutions)
   - [Tech Tradeoffs](#tech-tradeoffs)
   - [Tests](#tests)
@@ -93,6 +94,7 @@ http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/
 
 * Success Response:
   * code: 200 Request Succeeded!
+
   Content:
 `{
   "id": "XXXXXXXXXXXXXXXXXXX",
@@ -147,6 +149,29 @@ curl -i --request POST \
   N/A
 
 # Design Details
+
+## Directory Structures
+
+```
+.
++-- configs   ------------------------------------>  config files
++-- server    ------------------------------------>  server main folder
+|   +-- controllers           -------------------->  controller folder
+|   +-- lib                   -------------------->  lib folder
+|   |   +-- classes
+|   |   +-- helper
+|   +-- routes                -------------------->  router folder
+|   |   +-- apis              -------------------->  API folder can be v1/v2..
+|   |   |   +-- v1
+|   |   |
+|   +-- services              -------------------->  service folder
+|   |   +-- mails
++-- test      ------------------------------------>  test main folder
++-- index.js  ------------------------------------>  app root file
++-- s3-download.js ------------------------------->  downloading config file
+
+```
+
 
 ## Problems and Solutions
 
