@@ -27,7 +27,7 @@ server.create(config);
 server.start();
 
 // fork a child process to handle AWS SQS queue messages.
-//const grabAndSend = fork('./server/lib/helpers/send-email-by-sqs.js');
+const grabAndSend = fork('./server/lib/helpers/send-email-by-sqs.js');
 
 //start the heartbeats checking service.
-//schedule.scheduleJob('*/15 * * * * *', serversStatusCheck);
+schedule.scheduleJob('*/15 * * * * *', serversStatusCheck);
