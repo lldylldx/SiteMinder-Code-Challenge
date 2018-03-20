@@ -4,9 +4,10 @@
  * Dependencies
  */
 const mailServersManager = require('../classes/mail-servers-manager'),
-      mailServicesManager = require('../classes/mail-services-manager');
+      MailServicesManager = require('../classes/mail-services-manager');
 
 const
+  mailServicesManager = new MailServicesManager(),
   AWS = require('aws-sdk'),
   sqsRegion = 'ap-southeast-2',
   queueUrl = 'https://sqs.ap-southeast-2.amazonaws.com/791124190238/southface_com_au';
@@ -64,7 +65,15 @@ function receiveMessage(callback) {
       if (data.Messages) {
         // Get the first message (should be the only one to make it simple)
         const message = data.Messages[0];
-        const body = JSON.parse(message.Body);
+        try {
+          const body = JSON.parse(message.Body);
+        } catch(err) {
+          console.log(err);
+          return Promise.reject(new Error(400));
+
+        }
+
+
 
         receiptHandle = message.ReceiptHandle;
         console.log('receiptHandle:' + receiptHandle);
@@ -72,17 +81,17 @@ function receiveMessage(callback) {
         // Now this is where you'd do something with this message
         const serverName = mailServersManager.getPrimServer();
         //Check which client should be used, MailGun or SendGrid
-        if(serverName == 'null') {
+        if(serverName === 'null') {
           //if no primary server is set, then set mailgun as default
           serverName = 'mailgun';
         }
 
         // Create mail client based on primary server
         mailServicesManager.setServerName(serverName);
-        if(serverName == 'sendgrid') {
+        if(serverName === 'sendgrid') {
           mailServicesManager.setClient('post', 'mail/send');
         }
-        else if (serverName == 'mailgun') {
+        else if (serverName === 'mailgun') {
           mailServicesManager.setClient('post', '/messages');
         }
         // send email

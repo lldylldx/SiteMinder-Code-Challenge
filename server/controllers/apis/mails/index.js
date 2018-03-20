@@ -32,9 +32,10 @@ router.use('/send', (req, res, next) => {
   validator.setReqBody(req.body);
   validator.findParametersValid();
   const arrInvalidParams = validator.getInvalidPramaters();
+
   if (arrInvalidParams.length > 0) {
-    const resJson = buildJsonResponse('400', arrInvalidParams);
-    return next(res.json(resJson));
+    const resJson = buildJsonResponse(arrInvalidParams);
+    return next(res.status(resJson.code).json({"errors":resJson.errors}));
   }
 
   // add AWS SQS to support offload traffic when node server is a bit busy
@@ -48,10 +49,8 @@ router.use('/send', (req, res, next) => {
       //check if successfully sent to AWS SQS
       if(data.hasOwnProperty('MessageId')) {
         //build a response and send
-        const response = {
-          success: 'ok'
-        };
-        return next(res.json(response));
+        const resJson = buildJsonResponse();
+        return next(res.status(200).json(resJson.message));
       }
       else { // should return an server error.
         const response = {
@@ -62,9 +61,6 @@ router.use('/send', (req, res, next) => {
      }
     });
 
-    return next(res.json({
-      success: 'ok'
-    }));
   }
 
   return next();

@@ -14,6 +14,7 @@ setInterval(() => {
 
   sqsService.receiveMessage((err, data, response) => {
 
+    // if send email successfully, add count by 1 
     if(/^2\d\d$/.test(response)) {
       count = count + 1;
     }

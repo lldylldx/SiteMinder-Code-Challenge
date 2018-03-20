@@ -40,5 +40,4 @@ const
      Key : key
   };
 
-  //res.attachment(fileKey);
   s3.getObject(options).createReadStream().pipe(file);

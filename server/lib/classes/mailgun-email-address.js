@@ -34,40 +34,28 @@ class MailgunEmailAddress {
      }*/
      const {email, name} = data;
 
-     if(typeof name != undefined) {
+     if(typeof name !== 'undefined') {
        this.merge(email, name);
      }
      else {
-       this.emailaddress.puch(email);
+       this.emailaddress.push(email);
      }
 
    }
 
    merge(email, name) {
-     if(typeof email !=  'string' && typeof name != 'string') {
+     if(typeof email !==  'string' && typeof name !== 'string') {
        throw new Error('Expecting string for EmailAddress data.');
      }
+     console.log(email + ' : ' + name);
      this.emailaddress.push(name.concat(' <').concat(email).concat('>'));
+
    }
 
    toString() {
      return this.emailaddress.join(',');
    }
 
-   /*toJSON() {
-
-     const emailAddresses = this.toString();
-     //Initialize with mandatory properties
-     const json = {email};
-
-     //Add name if present
-     if (emailAddresses !== '') {
-       json.name = emailAddresses;
-     }
-
-     //Return
-     return json;
-   }*/
   /**************************************************************************
    * Static helpers
    ***/

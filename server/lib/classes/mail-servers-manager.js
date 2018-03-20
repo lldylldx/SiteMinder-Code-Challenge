@@ -20,7 +20,7 @@ class MailServersManager {
 
    addNewServer(servName, servStat) {
      //illegal value checking
-     if(servStat != 'active' && servStat != 'down'){
+     if(servStat != 'active' && servStat !== 'down'){
        return false;
      }
      this.mailServers.set(servName, servStat);
@@ -40,7 +40,7 @@ class MailServersManager {
    }
 
    getServerStatus(servName) {
-     if(this.hasMailServer(servName) != 'null') {
+     if(this.hasMailServer(servName) !== 'null') {
        return this.mailServers.get(servName);
      }
      return 'null';
@@ -72,7 +72,7 @@ class MailServersManager {
      console.log(this.mailServers.size);
      for(let i = 0; i < this.mailServers.size; i++) {
        let key = keys.next().value;
-       if( this.mailServers.get(key) == 'active') {
+       if( this.mailServers.get(key) === 'active') {
          return key;
        }
      }

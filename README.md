@@ -69,7 +69,7 @@ Curl command:
 curl -i --request POST \
 --URL http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/mail/send
 --header 'content-type: application/json'
---data 'PUT JSON BODY ABOVE Into HERE'
+--data 'PUT JSON BODY ABOVE HERE'
 ```
 
 ## API Details
@@ -85,15 +85,15 @@ http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/
 
 |Params Name    | Params Type   | Description                                       |Required|
 |:-------------:|:-------------:|:--------------------------------------------------|:-------|
-|To             | array[object] |email: string; name: string <br />(min:1, max:1000)|required|
-|From           |Object         |email: string; name: string                        |required|
-|CC             | array[object] |email: string; name: string <br />(min:1, max:1000)|optional|
-|BCC            | array[object] |email: string; name: string <br />(min:1, max:1000)|optional|
-|Subject        |Object         |subject of your email.                             |required|
-|Content        |Object         |specify the content of your email                  |required|
+|to             | array[object] |email: string; name: string <br />(min:1, max:1000)|required|
+|from           |Object         |email: string; name: string                        |required|
+|cc             | array[object] |email: string; name: string <br />(min:1, max:1000)|optional|
+|bcc            | array[object] |email: string; name: string <br />(min:1, max:1000)|optional|
+|subject        |Object         |subject of your email.  <br /> (min: 1)            |required|
+|content        | array[Object] |specify the content of your email                  |required|
 
 * Success Response:
-  * code: 200 Request Succeeded!
+  * code: 200 (Request Succeeded!)
 
   Content:
 `{
@@ -102,12 +102,12 @@ http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/
 }`
 * Error Response:
 
-  * code: 402 Request Failed <br />
-  Content:
-  `{"errors":[{"message":"The from email does not contain a valid address.","field":"from"}]`
+  * code: 402 (Request Failed) <br />
+    Content:
+  `{"errors":[{"message":"The email field does not contain a valid email address.","field":"from"}]`
 
-  * Code: 400 Bad Request <br />
-  Content:
+  * Code: 400 (Bad Request) <br />
+    Content:
   `{
     "errors": [{
       field: 'to',
@@ -117,12 +117,18 @@ http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/
       field: 'from',
       message: 'Invalid email address'}] }`
 
-  * Code: 404 Not Found <br />
-  Content:
-  `{"errors:":[{"message":"The requested item doesn’t exist"}]}`
-  * Code: 415 Unsupported Media Type <br />
+  * Code: 404 (Not Found) <br />
     Content:
-    `{"errors":[{"message":"Content-Type should be application/json."}]}`
+  `{"errors:":[{"message":"The requested item doesn’t exist"}]}`
+
+  * Code: 415 (Unsupported Media Type) <br />
+    Content:
+    `{"errors":[{"message":"The body of your request is not valid json!"}]}`
+
+  * Code: 500 ( <br />)
+    Content:
+  `{'errors': [{"message":"Internal Server Error"}]}`
+
 
 * Sample Call
 
@@ -216,7 +222,17 @@ http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000
 ## Tests
 Based on BDD/TDD, test is very important to make sure the code quality. Within this application, Mocha, Chalk, Node-Mock-Http modules are used in UT/FT/IT. CURL is also used in ST.
 
+To run the UT, execute the following command:
+
+```sh
+
+npm test
+
+```
+
 ## ToDo List
+* More test cases to cover UT/IT.
+* More RESTful APIs based on services provided by MailGun & SendGrid
 * Dockerize this application to make it more flexible for the production deployment and scaling
 * Use Kubernetes to auto deploy, scale and manage the dockerized application
 

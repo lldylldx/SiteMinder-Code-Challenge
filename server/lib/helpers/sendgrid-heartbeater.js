@@ -42,7 +42,7 @@ module.exports = async function sendgridHeartbeater() {
 
   console.log('sendgridClient.send return: ' + response.status);
 
-  if(response.status == '200') {
+  if(response.status === '200') {
     return true;
   }
   return false;

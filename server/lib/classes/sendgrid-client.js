@@ -16,7 +16,7 @@ const
     * Constructor
     */
    constructor(method='', endpoint='') {
-     console.log('In SendgridClient.constructor()....');
+
      this.apiKey = config.sendgridApiKey;
      this.baseURL = config.sendgridApiBaseURL;
      this.headers = {
@@ -34,21 +34,18 @@ const
    send(data) {
 
      console.log('In SendgridClient.send()....');
-     console.log('+++++++++++++++++++++++++++++++++++++++++++++');
-     console.log(data);
+
+     console.log(JSON.stringify(data));
      //set the api key
      this.setHeader('Authorization', 'Bearer '+this.apiKey);
      const url = this.baseURL + this.endPoint;
      console.log('Calling axios post ....');
-     try {
-       return  axios({method: this.method, url: url, data: data, headers: this.headers})
-                 .catch(error => {
-                    console.log(error.response)
-                });
-      }
-      catch(error) {
-        return Promise.reject(new Error(400));
-      }
+
+     return  axios({method: this.method, url: url, data: data, headers: this.headers})
+               .catch(error => {
+                  console.log(error.response)
+              });
+
    }
 
    /**

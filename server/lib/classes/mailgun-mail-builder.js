@@ -174,10 +174,10 @@ class MailgunMailBuilder {
     };
 
     //Arrays
-    if (typeof cc == 'string') {
+    if (typeof cc === 'string' && cc !== '') {
       json.cc = cc;
     }
-    if (typeof cc == 'string') {
+    if (typeof bcc === 'string' && bcc !== '') {
       json.bcc = bcc;
     }
 

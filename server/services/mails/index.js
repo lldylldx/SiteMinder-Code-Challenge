@@ -5,7 +5,10 @@
  */
 const
   mailServersManager = require('../../lib/classes/mail-servers-manager'),
-  mailServicesManager = require('../../lib/classes/mail-services-manager');
+  MailServicesManager = require('../../lib/classes/mail-services-manager'),
+  buildJsonResponse = require('../../lib/helpers/build-json-resp');
+
+const mailServicesManager = new MailServicesManager();
 
 // This service is used to send plaint text email.
 
@@ -13,51 +16,102 @@ async function sendMails(req, res) {
 
   console.log(req.body);
   const serverName = mailServersManager.getPrimServer();
-  //Check which APIs should be used, MailGun or SendGrid
-  if(serverName == 'null') {
-    const message = {
-      errors: [{
-        message: 'No mail server in service.'
-      }]
-    }
-    return res.json(message);
+  //if no primary server is set, then set mailgun as the default.
+  if(serverName === 'null') {
+    mailServersManager.setPrimServer('mailgun');
   }
 
   // Create mail client based on primary server
   mailServicesManager.setServerName(serverName);
-  if(serverName == 'sendgrid') {
+  if(serverName === 'sendgrid') {
     mailServicesManager.setClient('post', 'mail/send');
   }
-  else if (serverName == 'mailgun') {
+  else if (serverName === 'mailgun') {
     mailServicesManager.setClient('post', '/messages');
   }
   // send email
-  const response = await mailServicesManager.sendMail(req.body);
-  console.log('response.status: ' + response.status);
-  // check response from mail client
-  if(response.status == '200' || response.status == '202') { //use regex
-    const timestamp = Date.now() / 1000 | 0;
-    const message = {
-      timestamp: timestamp,
-      message: 'Queued. Thank you.'
-    };
-    return res.json(message);
+  console.log(JSON.stringify(req.body));
+
+  let response;
+
+  try {
+    response = await mailServicesManager.sendMail(req.body);
+    console.log('response.status: ' + response.status);
+  } catch (err) {
+    console.log(err);
+    mailServersManager.addPrimServDownTime();
+    const resJson = {errors:[{"messge": "The server is currently unavailable "}]};
+    return res.status(503).json(resJson);
+
   }
-  else if (response.status == '500') {
+
+  // check response from mail client
+  if(/^2\d\d$/.test(response.status)) { //if success
+    const resJson = buildJsonResponse();
+    console.log(JSON.stringify(resJson.message));
+
+    return res.status(200).json(resJson.message);
+  }
+
+  mailServersManager.addPrimServDownTime();
+
+  //failed then try another active server
+
+  //try another active server.
+  const anotherServerName = mailServersManager.isMailServiceOn();
+  //if no active server
+  if(anotherServerName === 'null') {
+    const resJson = {errors:[{"messge": "The server is currently unavailable "}]};
+    return res.status(503).json(resJson);
+
+  }
+
+  // Create mail client based on active server
+  mailServicesManager.setServerName(anotherServerName);
+  if(anotherServerName === 'sendgrid') {
+    mailServicesManager.setClient('post', 'mail/send');
+  }
+  else if (anotherServerName === 'mailgun') {
+    mailServicesManager.setClient('post', '/messages');
+  }
+  // send email
+
+  try {
+    response = await mailServicesManager.sendMail(req.body);
+    console.log('response.status: ' + response.status);
+  } catch (err) {
+    console.log(err);
+    mailServersManager.addPrimServDownTime();
+    const resJson = {errors:[{"messge": "The server is currently unavailable "}]};
+    return res.status(503).json(resJson);
+
+  }
+
+  // check response from mail client
+  if(/^2\d\d$/.test(response.status)) { //if success
+    const resJson = buildJsonResponse();
+    console.log(JSON.stringify(resJson.message));
+
+    return res.status(200).json(resJson.message);
+  }
+  else if (/^5\d\d$/.test(response.status)) { //if server error
     const message = {
       errors: [{
         message: 'Server Issues. Cant send the email, please try it again.'
       }]
     };
-    return res.json(message);
+    //mailServersManager.addPrimServDownTime();
+
+    return res.status(500).json(message);
   }
 
+  //else it's client side issue.
   const message = {
     errors: [{
       message: 'Unknow Issues.'
     }]
   };
-  return res.json(message);
+  return res.status(400).json(message);
 
 }
 

@@ -25,8 +25,8 @@ class Validator {
 
   isParametersMissing() {
 
-    if (this.reqBody.hasOwnProperty('to') && this.reqBody.hasOwnProperty('from')
-        && this.reqBody.hasOwnProperty('subject') && this.reqBody.hasOwnProperty('content')) {
+    if (this.reqBody['to'] && this.reqBody['from']
+        && this.reqBody['subject'] && this.reqBody['content']) {
       return false;
     }
     return true;
@@ -38,22 +38,22 @@ class Validator {
   findEmailsInvalid() {
     //mandatory property
     if(!isValidEmailProperty(this.reqBody.to)) {
-      this.invalidParams.add("to");
+      this.invalidParams.add({"invalid":"to"});
     }
     //mandatory property
     if(!isValidEmailProperty(this.reqBody.from)) {
-      this.invalidParams.add("from");
+      this.invalidParams.add({"invalid":"from"});
     }
     //optional property
-    if (this.reqBody.hasOwnProperty('cc')) {
+    if (this.reqBody['cc']) {
       if(!isValidEmailProperty(this.reqBody.cc)) {
-        this.invalidParams.add("cc");
+        this.invalidParams.add({"invalid":"cc"});
       }
     }
     //optional property
-    if (this.reqBody.hasOwnProperty('bcc')) {
+    if (this.reqBody['bcc']) {
       if(!isValidEmailProperty(this.reqBody.bcc)) {
-        this.invalidParams.add("bcc");
+        this.invalidParams.add({"invalid":"bcc"});
       }
     }
   }
@@ -63,24 +63,23 @@ class Validator {
    */
   findParametersMissing() {
     //const missing_params = [];
-    if (!this.reqBody.hasOwnProperty('to')) {
+    if (!this.reqBody['to']) {
 
-      this.invalidParams.add("to");
+      this.invalidParams.add({"missing":"to"});
     }
 
-    if (!this.reqBody.hasOwnProperty('from')) {
-      this.invalidParams.add("from");
+    if (!this.reqBody['from']) {
+      this.invalidParams.add({"missing":"from"});
     }
 
-    if (!this.reqBody.hasOwnProperty('subject')) {
-      this.invalidParams.add("subject");
+    if (!this.reqBody['subject']) {
+      this.invalidParams.add({"missing":"subject"});
     }
 
-    if (!this.reqBody.hasOwnProperty('content')) {
-      this.invalidParams.add("content");
+    if (!this.reqBody['content']) {
+      this.invalidParams.add({"missing":"content"});
     }
 
-    //return this.invalidParams;
   }
 
   /**
@@ -108,15 +107,14 @@ class Validator {
     this.reqBody = reqBody;
   }
 
+  /**
+   * return invalid params
+   */
   getInvalidPramaters() {
 
     //console.log(this.invalidParams.toString());
     return Array.from(this.invalidParams);
   }
-
-  /*getMissingParameters() {
-    return this.missingParams;
-  }*/
 
 }
 

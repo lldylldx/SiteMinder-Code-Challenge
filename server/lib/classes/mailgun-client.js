@@ -20,7 +20,7 @@ const
      this.domain = config.mailgunDomain;
      this.method = method;
      this.endPoint = endpoint;
-     //this.data = data;
+
    }
 
    /**
@@ -28,7 +28,6 @@ const
     */
    send(data) {
 
-     console.log('In MailgunClient.send()...');
      //console.log(JSON.stringify(data));
      //set the api key
      const auth = {
@@ -40,15 +39,12 @@ const
      console.log('api url is: ' + url);
      console.log('data is ' + JSON.stringify(data));
 
-     try {
-       return axios({method: this.method, url: url, auth: auth, params: data})
-              .catch(error => {
-                  console.log(error.response)
-              });
-     }
-     catch(error) {
-       return Promise.reject(new Error(400));
-     }
+
+     return axios({method: this.method, url: url, auth: auth, params: data})
+            .catch(error => {
+                console.log(error.response)
+            });
+
 
    }
 

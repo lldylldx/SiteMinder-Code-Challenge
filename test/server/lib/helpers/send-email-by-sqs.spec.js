@@ -5,7 +5,7 @@
  */
 const
   expect = require('chai').expect,
-  mailgunHeartbeater = require('../../../../server/lib/helpers/mailgun-heartbeater');
+  mailgunHeartbeater = require('../../../../server/lib/helpers/send-email-by-sqs');
 
 
   /**

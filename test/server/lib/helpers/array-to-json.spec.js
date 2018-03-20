@@ -28,7 +28,7 @@ describe('arrayToJSON', function() {
 
   //Tests
   it('should leave non object values as is', function() {
-    expect(json[2]).to.be.null();
+    expect(json[2]).to.be.null;
     expect(json[5]).to.equal(2);
     expect(json[6]).to.equal('test');
   });

@@ -17,7 +17,6 @@ class MailServicesManager {
   constructor(serverName='') {
     if(typeof serverName == 'string') {
       this.serverName = serverName;
-      //this.setClient(serverName);
     }
 
   }
@@ -29,10 +28,10 @@ class MailServicesManager {
 
     let mail;
 
-    if(this.serverName == 'mailgun') {
+    if(this.serverName === 'mailgun') {
       mail = MailgunMailBuilder.create(data);
     }
-    else if(this.serverName == 'sendgrid') {
+    else if(this.serverName === 'sendgrid') {
 
       mail = SendgridMailBuilder.create(data);
     }
@@ -67,12 +66,12 @@ class MailServicesManager {
    */
   setClient(method, endpoint) {
 
-    if(this.serverName == 'sendgrid') {
+    if(this.serverName === 'sendgrid') {
       this.client = new SendgridClient(method, endpoint);
       console.log('Create a new sendgrid client.');
     }
 
-    if(this.serverName == 'mailgun') {
+    if(this.serverName === 'mailgun') {
       console.log('create a mailgun client.');
       this.client = new MailgunClient(method, endpoint);
     }
@@ -81,4 +80,4 @@ class MailServicesManager {
 }
 
 //Export singleton instance
-module.exports = new MailServicesManager();
+module.exports = MailServicesManager;

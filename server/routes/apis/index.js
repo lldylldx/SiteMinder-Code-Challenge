@@ -1,8 +1,13 @@
 'use strict';
 
+
+/**
+ * Dependencies
+ */
+
 const
     express = require('express'),
-    v1ApiController = require('./v1')
+    v1ApiController = require('./v1');
     //v2ApiController = require('./v2');
 
 let router = express.Router();
