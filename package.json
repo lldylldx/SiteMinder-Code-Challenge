@@ -11,7 +11,7 @@
   "author": "Peter Tan",
   "license": "ISC",
   "engines": {
-    "node": "^4.2.0",
+    "node": "^8.2.0",
     "npm": "^5.7.1"
   },
   "dependencies": {
