@@ -5,7 +5,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "start": "node s3-download.js;node index.js",
+    "start": "node index.js",
     "test": "mocha $(find test -name '*.js')"
   },
   "author": "Peter Tan",

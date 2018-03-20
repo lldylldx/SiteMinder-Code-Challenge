@@ -67,7 +67,7 @@ Curl command:
 
 ```sh
 curl -i --request POST \
---URL http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/mail/send
+--URL https://site-minder-code-challenge.herokuapp.com/api/v1/mail/send
 --header 'content-type: application/json'
 --data 'PUT JSON BODY ABOVE HERE'
 ```
@@ -76,7 +76,7 @@ curl -i --request POST \
 
 * URL
 
-http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/
+https://site-minder-code-challenge.herokuapp.com/api/v1/
 
 * Method    
     mail/send
@@ -136,7 +136,7 @@ http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/
 
 ```sh
 curl -i --request POST \
---URL http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/mail/send
+--URL https://site-minder-code-challenge.herokuapp.com/api/v1/mail/send
 --header 'content-type: application/json' \
 --data '{"to":[{"email":"lldylldx@gmail.com","name":"Peter Tan"},{"email":"Hao Tan <south.face.au@gmail.com>"}],"cc":[{"email":"abc@test.com"}],"bcc":[{"email":"bcd@test.com","name":"Wei Zhao"}],"subject":"Hello, World!","from":{"email":"The Future <future@example.com>","name":"The Future"},"content":[{"type":"text/plaint","value":"Hello, world from the future!"}]}'
 ```
@@ -145,7 +145,7 @@ curl -i --request POST \
 
 ```sh
 curl -i --request POST \
---URL http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000/api/v1/mail/send
+--URL https://site-minder-code-challenge.herokuapp.com/api/v1/mail/send
 --header 'content-type: application/json' \
 --data '{"to":[{"email":"lldylldx@gmail.com","name":"Peter Tan"}], "subject":"Hello, World!", "content":[{"type":"text/plaint","value":"Hello, world from the future!"}]}'
 ```
@@ -215,9 +215,9 @@ Using local config file together with other source code will cause some sensitiv
 
 ## Deployment
 
-The application has been deployed to AWS EC2:
+The application has been deployed to HEROKU:
 
-http://ec2-54-206-38-14.ap-southeast-2.compute.amazonaws.com:3000
+https://site-minder-code-challenge.herokuapp.com/api/v1/mail/send
 
 ## Tests
 Based on BDD/TDD, test is very important to make sure the code quality. Within this application, Mocha, Chalk, Node-Mock-Http modules are used in UT/FT/IT. CURL is also used in ST.
